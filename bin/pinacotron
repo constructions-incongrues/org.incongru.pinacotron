@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+set -e
+
+function pinacotron__gallery() {
+    if [ -z "$2" ]; then \
+        echo "pinacotron gallery <browse|start|status|stop>"
+        exit 255
+    fi
+    case $2 in
+    start)
+        OPTIND=3
+        while getopts ":p:" option; do
+            case "${option}" in
+                p)
+                    GALLERY_PORT=${OPTARG}
+                    ;;
+                *)
+                    echo "pinacotron gallery start -p <port>"
+                    exit
+                    ;;
+            esac
+        done
+        docker run \
+            --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v ${PWD}/var:/var/local/pinacotron/ \
+            -e GALLERY_IMAGES_DIR=${PWD}/var \
+            -e GALLERY_PORT=${GALLERY_PORT-8000} \
+            --group-add="$(stat -c '%g' /var/run/docker.sock)" \
+            constructionsincongrues/pinacotron:latest \
+            gallery-start
+        ;;
+    stop)
+        docker run \
+            --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            --group-add="$(stat -c '%g' /var/run/docker.sock)" \
+            constructionsincongrues/pinacotron:latest \
+            gallery-stop
+        ;;
+    status)
+        docker inspect -f '{{ .State.Status }}' pinacotron_gallery
+        ;;
+    browse)
+        xdg-open http://localhost:8000
+        ;;
+    esac
+    }
+
+function pinacotron__help() {
+    echo "Pinacotron usage documentation"
+    echo
+    echo "Available commands:"
+    echo "    gallery:    Control gallery web service"
+    echo "    help:       Show this help"
+    echo "    init:       Initialize stub configuration"
+    echo "    images:     Download collections images"
+    echo "    posters:    Generate posters"
+    echo "    selfupdate: Upgrade Pinacotron to its latest version"
+    echo "    version:    Show the Pinacotron version information"
+}
+
+pinacotron__init() {
+    mkdir -p ${PWD}/etc/pinacotron ${PWD}/var
+    docker run \
+        --rm \
+        -v ${PWD}/etc/pinacotron:/etc/pinacotron \
+        -v ${PWD}/var:/var/local/pinacotron \
+        constructionsincongrues/pinacotron:latest \
+        init
+}
+
+pinacotron__images() {
+    OPTIND=2
+    while getopts "P" option; do
+        case "${option}" in
+            P)
+                PINACOTRON_IMAGES_PURGE=1
+                ;;
+            *)
+                exit
+                ;;
+        esac
+    done
+    docker run \
+        --rm \
+        -v ${PWD}/etc/pinacotron:/etc/pinacotron \
+        -v ${PWD}/var:/var/local/pinacotron \
+        -e PINACOTRON_IMAGES_PURGE=${PINACOTRON_IMAGES_PURGE} \
+        constructionsincongrues/pinacotron:latest \
+        images
+}
+
+function pinacotron__posters() {
+    OPTIND=2
+    while getopts "Pw:" option; do
+        case "${option}" in
+            P)
+                PINACOTRON_POSTERS_PURGE=1
+                ;;
+            w)
+                PINACOTRON_POSTERS_WORDS=${OPTARG}
+                ;;
+            c)
+                PINACOTRON_POSTERS_CONVERT_PARAMETERS=${OPTARG}
+                ;;
+            *)
+                exit
+                ;;
+        esac
+    done
+    docker run \
+        --rm \
+        -v ${PWD}/etc/pinacotron:/etc/pinacotron \
+        -v ${PWD}/var:/var/local/pinacotron \
+        -e PINACOTRON_IMAGES_PURGE=${PINACOTRON_POSTERS_PURGE-0} \
+        -e PINACOTRON_POSTERS_WORDS="${PINACOTRON_POSTERS_WORDS-default.txt}" \
+        -e PINACOTRON_POSTERS_CONVERT_PARAMETERS="${PINACOTRON_POSTERS_CONVERT_PARAMETERS-'-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0'}" \
+        constructionsincongrues/pinacotron:latest \
+        posters
+}
+
+function pinacotron__selfupdate() {
+    docker pull constructionsincongrues/pinacotron:latest
+}
+
+function pinacotron__version() {
+    docker run \
+        --rm \
+        constructionsincongrues/pinacotron:latest \
+        version
+}
+
+# make sure we actually *did* get passed a valid function name
+if declare -f "pinacotron__$1" >/dev/null 2>&1; then
+  # invoke that function, passing arguments through
+  "pinacotron__$1" "$@" # same as "$1" "$2" "$3" ... for full argument list
+else
+  pinacotron__help
+  exit 255
+fi

@@ -1,5 +1,12 @@
 # Pinacotron
 
+## Installation
+
+```sh
+curl https://raw.githubusercontent.com/constructions-incongrues/org.incongru.pinacotron/master/bin/pinacotron | sudo tee /usr/local/bin/pinacotron
+sudo chmod +x /usr/local/bin/pinacotron
+```
+
 ## Getting started
 
 - Create a dedicated directory :
@@ -7,44 +14,30 @@
   ```sh
   mkdir -p myproject
   cd myproject
-  mkdir -p etc/pinacotron var
   ```
 
 - Bootstrap configuration :
 
   ```sh
-  docker run \
-    --rm \
-    -v ${PWD}/etc/pinacotron:/etc/pinacotron \
-    -v ${PWD}/var:/var/local/pinacotron \
-    constructionsincongrues/pinacotron \
-    init
+  pinacotron init
   ```
 
 - Download collection images :
 
   ```sh
-  docker run \
-    --rm \
-    -v ${PWD}/etc/pinacotron:/etc/pinacotron \
-    -v ${PWD}/var:/var/local/pinacotron \
-    constructionsincongrues/pinacotron \
-    images
+  pinacotron images
   ```
 
-- Browse images at <http://localhost:8000> :
+- Start image gallery service :
 
   ```sh
-  docker run \
-    --rm \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v ${PWD}/var:/var/local/pinacotron/ \
-    -e GALLERY_IMAGES_DIR=$PWD/var \
-    -e HOST_UID=$(id -u) \
-    -e HOST_GID=$(id -g) \
-    --group-add=$(stat -c '%g' /var/run/docker.sock) \
-    constructionsincongrues/pinacotron \
-    gallery-start
+  pinacotron gallery start
+  ```
+
+- Browse image gallery service :
+
+  ```sh
+  pinacotron gallery browse
   ```
 
 ## Usage
@@ -62,47 +55,35 @@
 Displays help.
 
 ```sh
-docker run \
-    --rm \
-    constructionsincongrues/pinacotron \
-    help
+pinacotron help
 ```
 
-#### gallery-start
+#### gallery start
 
 Starts a web image gallery service on <http://localhost:8000>.
 
 ##### Parameters
 
-- `GALLERY_IMAGES_DIR`
-- `GALLERY_PORT=8000`
+- `-p` : Image gallery port (default : `8000`)
 
 ##### Examples
 
 ```sh
-docker run \
-    --rm \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v ${PWD}/var:/var/local/pinacotron/ \
-    -e GALLERY_IMAGES_DIR=$PWD/var \
-    --group-add=$(stat -c '%g' /var/run/docker.sock) \
-    constructionsincongrues/pinacotron \
-    gallery-start
+# Default configuration
+pinacotron gallery start
+
+# Custom port
+pinacotron gallery start -p 9000
 ```
 
-#### gallery-stop
+#### gallery stop
 
 Stops the web image gallery service.
 
 ##### Examples
 
 ```sh
-docker run \
-    --rm \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    --group-add=$(stat -c '%g' /var/run/docker.sock) \
-    constructionsincongrues/pinacotron \
-    gallery-stop
+pinacotron gallery stop
 ```
 
 #### images
@@ -111,17 +92,12 @@ Downloads images from collections.
 
 ##### Parameters
 
-- `PINACOTRON_IMAGES_PURGE=0`
+- `-P` : Purge images folder
 
 ##### Examples
 
 ```sh
-docker run \
-    --rm \
-    -v ${PWD}/etc/pinacotron:/etc/pinacotron \
-    -v ${PWD}/var:/var/local/pinacotron \
-    constructionsincongrues/pinacotron \
-    images
+pinacotron gallery stop
 ```
 
 #### init
@@ -131,12 +107,7 @@ Creates a stub configuration.
 ##### Examples
 
 ```sh
-docker run \
-    --rm \
-    -v ${PWD}/etc/pinacotron:/etc/pinacotron \
-    -v ${PWD}/var:/var/local/pinacotron \
-    constructionsincongrues/pinacotron \
-    init
+pinacotron init
 ```
 
 #### posters
@@ -145,28 +116,27 @@ Combine images with words.
 
 ##### Parameters
 
-- `PINACOTRON_POSTERS_CONVERT_PARAMETERS=-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0`
-- `PINACOTRON_POSTERS_PURGE=0`
-- `PINACOTRON_POSTERS_WORDS=default.txt`
+- `-c` : Convert parameters for text (default : `-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0`)
+- `-P` : Purge posters folder
+- `-w` : List of words in `words/` directory (default : `default.txt`)
 
 ##### Examples
 
 ```sh
-docker run \
-    --rm \
-    -v ${PWD}/etc/pinacotron:/etc/pinacotron \
-    -v ${PWD}/var:/var/local/pinacotron \
-    constructionsincongrues/pinacotron \
-    posters
+# Default configuration
+pinacotron posters
+
+# Purge existing posters
+pinacotron posters -P
+
+## Red text
+pinacotron posters -c '-gravity South -pointsize 196 -stroke black -fill "#FF0000" -colorspace Gray -separate -average -annotate 0'
 ```
 
 #### version
 
-Displays version.
+Show Pinacotron version information.
 
 ```sh
-docker run \
-    --rm \
-    constructionsincongrues/pinacotron \
-    version
+pinacotron version
 ```
