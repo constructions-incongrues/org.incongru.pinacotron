@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+function pinacotron__gallery() {
+    if [ -z "$2" ]; then \
+        echo "pinacotron gallery <browse|start|status|stop>"
+        exit 255
+    fi
+    case $2 in
+    start)
+        docker run \
+            --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v ${PWD}/var:/var/local/pinacotron/ \
+            -e GALLERY_IMAGES_DIR=$PWD/var \
+            --group-add=$(stat -c '%g' /var/run/docker.sock) \
+            constructionsincongrues/pinacotron:latest \
+            gallery-start
+        ;;
+    stop)
+        docker run \
+            --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            --group-add=$(stat -c '%g' /var/run/docker.sock) \
+            constructionsincongrues/pinacotron:latest \
+            gallery-stop
+        ;;
+    status)
+        docker inspect -f '{{ .State.Status }}' pinacotron_gallery
+        ;;
+    browse)
+        xdg-open http://localhost:8000
+        ;;
+    esac
+    }
+
+function pinacotron__help() {
+    echo "Pinacotron usage documentation"
+    echo
+    echo "Global options:"
+    echo "    -d <working_directory>"
+    echo
+    echo "Available commands:"
+    echo "    gallery:    Control gallery web service"
+    echo "    help:       Show this help"
+    echo "    init:       Initialize stub configuration"
+    echo "    images:     Download collections images"
+    echo "    posters:    Generate posters"
+    echo "    selfupdate: Upgrade Pinacotron to its latest version"
+    echo "    version:    Show the Pinacotron version information"
+}
+
+pinacotron__init() {
+    docker run \
+        --rm \
+        -v ${PWD}/etc/pinacotron:/etc/pinacotron \
+        -v ${PWD}/var:/var/local/pinacotron \
+        constructionsincongrues/pinacotron:latest \
+        init
+}
+
+pinacotron__images() {
+    docker run \
+        --rm \
+        -v ${PWD}/etc/pinacotron:/etc/pinacotron \
+        -v ${PWD}/var:/var/local/pinacotron \
+        constructionsincongrues/pinacotron:latest \
+        images
+}
+
+function pinacotron__posters() {
+    docker run \
+        --rm \
+        -v ${PWD}/etc/pinacotron:/etc/pinacotron \
+        -v ${PWD}/var:/var/local/pinacotron \
+        constructionsincongrues/pinacotron:latest \
+        posters
+}
+
+function pinacotron__selfupdate() {
+    docker pull constructionsincongrues/pinacotron:latest
+}
+
+function pinacotron__version() {
+    docker run \
+        --rm \
+        constructionsincongrues/pinacotron:latest \
+        version
+}
+
+# make sure we actually *did* get passed a valid function name
+if declare -f "pinacotron__$1" >/dev/null 2>&1; then
+  # invoke that function, passing arguments through
+  "pinacotron__$1" "$@" # same as "$1" "$2" "$3" ... for full argument list
+else
+  pinacotron__help
+  exit 255
+fi
