@@ -30,10 +30,10 @@ RUN USER=pinacotron && \
     mkdir -p /etc/fixuid && \
     printf "user: $USER\ngroup: $GROUP\n" > /etc/fixuid/config.yml
 
-COPY ./src/bin/images /usr/local/bin/images
-COPY ./src/bin/posters /usr/local/bin/posters
-RUN chmod +x /usr/local/bin/images
-RUN chmod +x /usr/local/bin/posters
+COPY --chown=pinacotron:pinacotron ./src/actions/images /usr/local/bin/pinacotron-images
+COPY --chown=pinacotron:pinacotron ./src/actions/posters /usr/local/bin/pinacotron-posters
+RUN chmod +x /usr/local/bin/pinacotron-images
+RUN chmod +x /usr/local/bin/pinacotron-posters
 
 COPY ./src/Makefile /usr/local/src/pinacotron/Makefile
 

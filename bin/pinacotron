@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+PINACOTRON_REPOSITORY=${PINACOTRON_REPOSITORY:-constructionsincongrues/pinacotron}
+PINACOTRON_TAG=${PINACOTRON_TAG:-latest}
+
 function pinacotron__gallery() {
     if [ -z "$2" ]; then \
         echo "pinacotron gallery <browse|start|status|stop>"
@@ -27,7 +30,7 @@ function pinacotron__gallery() {
             -e GALLERY_IMAGES_DIR=${PWD}/var \
             -e GALLERY_PORT=${GALLERY_PORT-8000} \
             --group-add="$(stat -c '%g' /var/run/docker.sock)" \
-            constructionsincongrues/pinacotron:latest \
+            ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
             gallery-start
         ;;
     stop)
@@ -35,7 +38,7 @@ function pinacotron__gallery() {
             --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
             --group-add="$(stat -c '%g' /var/run/docker.sock)" \
-            constructionsincongrues/pinacotron:latest \
+            ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
             gallery-stop
         ;;
     status)
@@ -61,12 +64,12 @@ function pinacotron__help() {
 }
 
 pinacotron__init() {
-    mkdir -p ${PWD}/etc/pinacotron ${PWD}/var
+    mkdir -pv ${PWD}/etc/pinacotron ${PWD}/var
     docker run \
         --rm \
         -v ${PWD}/etc/pinacotron:/etc/pinacotron \
         -v ${PWD}/var:/var/local/pinacotron \
-        constructionsincongrues/pinacotron:latest \
+        ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
         init
 }
 
@@ -87,7 +90,7 @@ pinacotron__images() {
         -v ${PWD}/etc/pinacotron:/etc/pinacotron \
         -v ${PWD}/var:/var/local/pinacotron \
         -e PINACOTRON_IMAGES_PURGE=${PINACOTRON_IMAGES_PURGE} \
-        constructionsincongrues/pinacotron:latest \
+        ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
         images
 }
 
@@ -116,18 +119,18 @@ function pinacotron__posters() {
         -e PINACOTRON_IMAGES_PURGE=${PINACOTRON_POSTERS_PURGE-0} \
         -e PINACOTRON_POSTERS_WORDS="${PINACOTRON_POSTERS_WORDS-default.txt}" \
         -e PINACOTRON_POSTERS_CONVERT_PARAMETERS="${PINACOTRON_POSTERS_CONVERT_PARAMETERS-'-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0'}" \
-        constructionsincongrues/pinacotron:latest \
+        ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
         posters
 }
 
 function pinacotron__selfupdate() {
-    docker pull constructionsincongrues/pinacotron:latest
+    docker pull ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG}
 }
 
 function pinacotron__version() {
     docker run \
         --rm \
-        constructionsincongrues/pinacotron:latest \
+        ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
         version
 }
 
