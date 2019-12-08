@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 function pinacotron__gallery() {
     if [ -z "$2" ]; then \
@@ -7,12 +8,25 @@ function pinacotron__gallery() {
     fi
     case $2 in
     start)
+        OPTIND=3
+        while getopts ":p:" option; do
+            case "${option}" in
+                p)
+                    GALLERY_PORT=${OPTARG}
+                    ;;
+                *)
+                    echo "pinacotron gallery start -p <port>"
+                    exit
+                    ;;
+            esac
+        done
         docker run \
             --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v ${PWD}/var:/var/local/pinacotron/ \
-            -e GALLERY_IMAGES_DIR=$PWD/var \
-            --group-add=$(stat -c '%g' /var/run/docker.sock) \
+            -e GALLERY_IMAGES_DIR=${PWD}/var \
+            -e GALLERY_PORT=${GALLERY_PORT-8000} \
+            --group-add="$(stat -c '%g' /var/run/docker.sock)" \
             constructionsincongrues/pinacotron:latest \
             gallery-start
         ;;
@@ -20,7 +34,7 @@ function pinacotron__gallery() {
         docker run \
             --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
-            --group-add=$(stat -c '%g' /var/run/docker.sock) \
+            --group-add="$(stat -c '%g' /var/run/docker.sock)" \
             constructionsincongrues/pinacotron:latest \
             gallery-stop
         ;;
@@ -36,9 +50,6 @@ function pinacotron__gallery() {
 function pinacotron__help() {
     echo "Pinacotron usage documentation"
     echo
-    echo "Global options:"
-    echo "    -d <working_directory>"
-    echo
     echo "Available commands:"
     echo "    gallery:    Control gallery web service"
     echo "    help:       Show this help"
@@ -50,6 +61,7 @@ function pinacotron__help() {
 }
 
 pinacotron__init() {
+    mkdir -p ${PWD}/etc/pinacotron ${PWD}/var
     docker run \
         --rm \
         -v ${PWD}/etc/pinacotron:/etc/pinacotron \
@@ -59,19 +71,51 @@ pinacotron__init() {
 }
 
 pinacotron__images() {
+    OPTIND=2
+    while getopts "P" option; do
+        case "${option}" in
+            P)
+                PINACOTRON_IMAGES_PURGE=1
+                ;;
+            *)
+                exit
+                ;;
+        esac
+    done
     docker run \
         --rm \
         -v ${PWD}/etc/pinacotron:/etc/pinacotron \
         -v ${PWD}/var:/var/local/pinacotron \
+        -e PINACOTRON_IMAGES_PURGE=${PINACOTRON_IMAGES_PURGE} \
         constructionsincongrues/pinacotron:latest \
         images
 }
 
 function pinacotron__posters() {
+    OPTIND=2
+    while getopts "Pw:" option; do
+        case "${option}" in
+            P)
+                PINACOTRON_POSTERS_PURGE=1
+                ;;
+            w)
+                PINACOTRON_POSTERS_WORDS=${OPTARG}
+                ;;
+            c)
+                PINACOTRON_POSTERS_CONVERT_PARAMETERS=${OPTARG}
+                ;;
+            *)
+                exit
+                ;;
+        esac
+    done
     docker run \
         --rm \
         -v ${PWD}/etc/pinacotron:/etc/pinacotron \
         -v ${PWD}/var:/var/local/pinacotron \
+        -e PINACOTRON_IMAGES_PURGE=${PINACOTRON_POSTERS_PURGE-0} \
+        -e PINACOTRON_POSTERS_WORDS="${PINACOTRON_POSTERS_WORDS-default.txt}" \
+        -e PINACOTRON_POSTERS_CONVERT_PARAMETERS="${PINACOTRON_POSTERS_CONVERT_PARAMETERS-'-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0'}" \
         constructionsincongrues/pinacotron:latest \
         posters
 }
