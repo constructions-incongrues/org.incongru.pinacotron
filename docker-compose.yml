@@ -4,5 +4,33 @@ services:
   pinacotron:
     build: .
     volumes:
-      - ${PINACOTRON_PROFILE-./etc/fixtures}:/etc/pinacotron/
+      - ${PINACOTRON_PROFILE-./etc/fixtures}:/etc/pinacotron
       - ${PINACOTRON_VAR-./var}:/var/local/pinacotron/
+
+  pigallery:
+    image: bpatrik/pigallery2:1.7.0-stretch
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front.entrypoints=web"
+      - "traefik.http.routers.front.rule=Host(`pinacotron.localhost`)"
+      - "traefik.http.services.front.loadbalancer.server.port=80"
+    volumes:
+      - ./etc/pigallery.json:/pigallery2-release/config.json:ro
+      - ${PINACOTRON_VAR-./var}:/pigallery2-release/pinacotron/images
+
+  traefik:
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    image: traefik:2.0.4
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.pinacotron.localhost`)"
+      - "traefik.http.routers.traefik.entrypoints=web"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro

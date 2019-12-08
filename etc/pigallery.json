@@ -1,0 +1,117 @@
+{
+    "Client": {
+        "applicationTitle": "Pinacotron",
+        "appVersion": "",
+        "Thumbnail": {
+            "concurrentThumbnailGenerations": 1,
+            "thumbnailSizes": [
+                200,
+                400,
+                600
+            ],
+            "iconSize": 45,
+            "personThumbnailSize": 200
+        },
+        "Search": {
+            "enabled": false,
+            "instantSearchEnabled": true,
+            "InstantSearchTimeout": 3000,
+            "searchCacheTimeout": 3600000,
+            "instantSearchCacheTimeout": 3600000,
+            "AutoComplete": {
+                "enabled": true,
+                "cacheTimeout": 3600000,
+                "maxItemsPerCategory": 5
+            }
+        },
+        "Sharing": {
+            "passwordProtected": false
+        },
+        "Map": {
+            "enabled": false,
+            "useImageMarkers": true,
+            "mapProvider": 0,
+            "mapboxAccessToken": "",
+            "customLayers": [
+                {
+                    "name": "street",
+                    "url": ""
+                }
+            ]
+        },
+        "RandomPhoto": {
+            "enabled": false
+        },
+        "Video": {
+            "enabled": false
+        },
+        "MetaFile": {
+            "enabled": false
+        },
+        "Other": {
+            "captionFirstNaming": false,
+            "enableCache": true,
+            "enableOnScrollRendering": true,
+            "enableOnScrollThumbnailPrioritising": true,
+            "defaultPhotoSortingMethod": 3,
+            "NavBar": {
+                "showItemCount": true
+            }
+        },
+        "Faces": {
+            "enabled": true,
+            "keywordsToPersons": true,
+            "writeAccessMinRole": 4
+        },
+        "authenticationRequired": false,
+        "unAuthenticatedUserRole": 4,
+        "publicUrl": "http://pinacotron.localhost",
+        "urlBase": "",
+        "languages": []
+    },
+    "Server": {
+        "port": 80,
+        "host": "0.0.0.0",
+        "imagesFolder": "pinacotron/images",
+        "thumbnail": {
+            "folder": "pinacotron/TEMP",
+            "processingLibrary": 3,
+            "qualityPriority": true,
+            "personFaceMargin": 0.6
+        },
+        "log": {
+            "level": 3,
+            "sqlLevel": 2
+        },
+        "sessionTimeout": 604800000,
+        "photoMetadataSize": 524288,
+        "database": {
+            "type": 3,
+            "mysql": {
+                "host": "",
+                "username": "",
+                "password": "",
+                "database": ""
+            },
+            "sqlite": {
+                "storage": "sqlite.db"
+            }
+        },
+        "sharing": {
+            "updateTimeout": 300000
+        },
+        "threading": {
+            "enable": true,
+            "thumbnailThreads": 0
+        },
+        "indexing": {
+            "folderPreviewSize": 2,
+            "cachedFolderTimeout": 3600000,
+            "reIndexingSensitivity": 1
+        },
+        "duplicates": {
+            "listingLimit": 1000
+        }
+    },
+    "__NOTE": "NOTE: this config is not intended for manual edit, use the app UI instead as it has comments and descriptions."
+}
