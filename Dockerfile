@@ -39,7 +39,6 @@ COPY ./src/Makefile /usr/local/src/pinacotron/Makefile
 
 COPY ./etc/pigallery.json /etc/pigallery.json
 
-ARG DOCKER_TAG
 ENV PINACOTRON_VERSION=${DOCKER_TAG}
 
 RUN mkdir -p /var/local/pinacotron /usr/local/src/pinacotron /etc/pinacotron && \
