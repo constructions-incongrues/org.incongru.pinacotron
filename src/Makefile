@@ -25,6 +25,16 @@ gallery-stop: ## Stops the local web gallery
 images: ## Downloads images from collections
 	/usr/local/bin/images
 
+init: ## Creates stub configuration
+	mkdir -p /var/local/pinacotron/images /var/local/pinacotron/posters /var/local/pinacotron/posters/pdf /var/local/pinacotron/posters/png
+	mkdir -p /etc/pinacotron/collections/mycollection
+	echo "lovely kitten" > /etc/pinacotron/collections/mycollection/keywords.txt
+	echo "adorable baby dog" >> /etc/pinacotron/collections/mycollection/keywords.txt
+	echo "-s large -l 5" >> /etc/pinacotron/collections/mycollection/parameters.txt
+	mkdir -p /etc/pinacotron/words
+	echo "hello world" >> /etc/pinacotron/words/default.txt
+	chown -R $${HOST_UID-1000}:$${HOST_GID-1000} /etc/pinacotron/
+
 posters: ## Combine words and images into posters
 	/usr/local/bin/posters
 

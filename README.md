@@ -1,12 +1,56 @@
 # Pinacotron
 
+## Getting started
+
+- Create a dedicated directory :
+
+  ```sh
+  mkdir myproject
+  ```
+
+- Bootstrap configuration :
+
+  ```sh
+  docker run \
+    --rm \
+    -v ${PWD}/etc/pinacotron:/etc/pinacotron \
+    -v ${PWD}/var:/var/local/pinacotron \
+    constructionsincongrues/pinacotron \
+    init
+  ```
+
+- Download collection images :
+
+  ```sh
+  docker run \
+    --rm \
+    -v ${PWD}/etc/pinacotron:/etc/pinacotron \
+    -v ${PWD}/var:/var/local/pinacotron \
+    constructionsincongrues/pinacotron \
+    images
+  ```
+
+- Browse images at <http://localhost:8000> :
+
+  ```sh
+  docker run \
+    --rm \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v ${PWD}/var:/var/local/pinacotron/ \
+    -e GALLERY_IMAGES_DIR=$PWD/var \
+    -e HOST_UID=$(id -u) \
+    -e HOST_GID=$(id -g) \
+    constructionsincongrues/pinacotron \
+    gallery-start
+  ```
+
 ## Usage
 
-### Configuration
+### Configuration files
 
-- `/etc/pinacotron/collections/<collection>/keywords.txt`
-- `/etc/pinacotron/collections/<collection>/parameters.txt`
-- `/etc/pinacotron/words/words.txt`
+- `etc/pinacotron/collections/<collection>/keywords.txt`
+- `etc/pinacotron/collections/<collection>/parameters.txt`
+- `etc/pinacotron/words/words.txt`
 
 ### Commands
 
@@ -77,6 +121,21 @@ docker run \
     -v ${PWD}/var:/var/local/pinacotron \
     constructionsincongrues/pinacotron \
     images
+```
+
+#### init
+
+Creates a stub configuration.
+
+##### Examples
+
+```sh
+docker run \
+    --rm \
+    -v ${PWD}/etc/pinacotron:/etc/pinacotron \
+    -v ${PWD}/var:/var/local/pinacotron \
+    constructionsincongrues/pinacotron \
+    init
 ```
 
 #### posters

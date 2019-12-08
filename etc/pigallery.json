@@ -13,7 +13,7 @@
             "personThumbnailSize": 200
         },
         "Search": {
-            "enabled": false,
+            "enabled": true,
             "instantSearchEnabled": true,
             "InstantSearchTimeout": 3000,
             "searchCacheTimeout": 3600000,
