@@ -10,9 +10,9 @@
 
 ### Commands
 
-Displays help.
-
 #### help
+
+Displays help.
 
 ```sh
 docker run \
@@ -59,4 +59,15 @@ docker run \
     -v ${PWD}/var:/var/local/pinacotron \
     constructionsincongrues/pinacotron \
     posters
+```
+
+#### version
+
+Displays version.
+
+```sh
+docker run \
+    --rm \
+    constructionsincongrues/pinacotron \
+    version
 ```

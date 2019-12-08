@@ -5,10 +5,13 @@ VOLUME [ "/etc/pinacotron" ]
 
 WORKDIR /usr/local/src/pinacotron
 
+ARG PINACOTRON_VERSION
+
 ENV PINACOTRON_IMAGES_PURGE=0
 ENV PINACOTRON_POSTERS_CONVERT_PARAMETERS='-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0'
 ENV PINACOTRON_POSTERS_PURGE=0
 ENV PINACOTRON_POSTERS_WORDS='default.txt'
+ENV PINACOTRON_VERSION=${PINACOTRON_VERSION}
 
 RUN apk --update --no-cache add \
         bash \

@@ -6,3 +6,6 @@ images: ## Downloads images from collections
 
 posters: ## Combine words and images into posters
 	/usr/local/bin/posters
+
+version: ## Displays version
+	@echo "pinacotron: $$PINACOTRON_VERSION"
