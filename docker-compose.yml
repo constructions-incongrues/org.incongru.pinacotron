@@ -1,0 +1,8 @@
+version: '2.4'
+
+services:
+  pinacotron:
+    build: .
+    volumes:
+      - ${PINACOTRON_PROFILE-./etc/fixtures}:/etc/pinacotron/
+      - ${PINACOTRON_VAR-./var}:/var/local/pinacotron/

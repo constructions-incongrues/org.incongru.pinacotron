@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ "$PINACOTRON_POSTERS_PURGE" == "1" ]]; then
+    rm -rf /var/local/pinacotron/posters/*
+fi
+
+mkdir -p /var/local/pinacotron/posters
+mkdir -p /var/local/pinacotron/posters/png
+mkdir -p /var/local/pinacotron/posters/pdf
+
+find /var/local/pinacotron/images -type f |while read file; do
+    echo $file
+    shortname=$(basename "$file")
+    convert "$file" $(echo ${PINACOTRON_POSTERS_CONVERT_PARAMETERS} | xargs) "$(shuf -n1 /etc/pinacotron/words/${PINACOTRON_POSTERS_WORDS} | tr ' ' '\n')" /var/local/pinacotron/posters/$shortname
+    convert -density 300 -page A4 -resize 1500x2185\! /var/local/pinacotron/posters/$shortname /var/local/pinacotron/posters/png/$shortname.png
+    convert -density 300 -page A4 -resize 1500x2185\! /var/local/pinacotron/posters/$shortname /var/local/pinacotron/posters/pdf/$shortname.pdf
+    rm /var/local/pinacotron/posters/$shortname
+done
+
+pdfunite /var/local/pinacotron/posters/pdf/*.pdf /var/local/pinacotron/posters.pdf
