@@ -21,6 +21,45 @@ docker run \
     help
 ```
 
+#### gallery-start
+
+Starts a web image gallery service on <http://localhost:8000>.
+
+##### Parameters
+
+- `GALLERY_IMAGES_DIR`
+- `GALLERY_PORT=8000`
+- `HOST_GID`
+- `HOST_UID`
+
+##### Examples
+
+```sh
+docker run \
+    --rm \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v ${PWD}/var:/var/local/pinacotron/ \
+    -e GALLERY_IMAGES_DIR=$PWD/var \
+    -e HOST_UID=$(id -u) \
+    -e HOST_GID=$(id -g) \
+    constructionsincongrues/pinacotron \
+    gallery-start
+```
+
+#### gallery-stop
+
+Stops the web image gallery service.
+
+##### Examples
+
+```sh
+docker run \
+    --rm \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    constructionsincongrues/pinacotron \
+    gallery-stop
+```
+
 #### images
 
 Downloads images from collections.

@@ -12,6 +12,7 @@ ENV PINACOTRON_POSTERS_WORDS='default.txt'
 
 RUN apk --update --no-cache add \
         bash \
+        docker \
         imagemagick \
         make \
         msttcorefonts-installer \
@@ -24,6 +25,8 @@ RUN chmod +x /usr/local/bin/images
 RUN chmod +x /usr/local/bin/posters
 
 COPY ./src/Makefile /usr/local/src/pinacotron/Makefile
+
+COPY ./etc/pigallery.json /etc/pigallery.json
 
 ARG DOCKER_TAG
 ENV PINACOTRON_VERSION=${DOCKER_TAG}
