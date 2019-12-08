@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+for COLLECTION in /etc/pinacotron/collections/*; do
+    if [[ "$PINACOTRON_IMAGES_PURGE" == "1" ]]; then
+        rm -rf /var/local/pinacotron/images/$(basename $COLLECTION)
+    fi
+    if [ ! -d "/var/local/pinacotron/images/$(basename $COLLECTION)" ]; then
+        googleimagesdownload $(cat $COLLECTION/parameters.txt) -kf $COLLECTION/keywords.txt -o "/var/local/pinacotron/images/$(basename $COLLECTION)"
+    fi
+done
