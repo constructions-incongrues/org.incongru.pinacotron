@@ -1,2 +1,2 @@
 build:
-	docker-compose build --build-arg=PINACOTRON_VERSION=`git describe --tags`
+	docker-compose build --build-arg=DOCKER_TAG=`git describe --tags`
