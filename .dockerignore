@@ -1,3 +1,4 @@
 .git
 /etc/fixtures
-/var
+/var/*
+/etc/pinacotron/*

@@ -5,15 +5,14 @@ help: ## Show help
 
 gallery-start: ## Starts a local web gallery for browsing images
 	if [ ! -f "/var/local/pinacotron/pigallery.json" ]; then cp /etc/pigallery.json /var/local/pinacotron/; fi
-	chown $${HOST_UID-1000}:$${HOST_GID-1000} /var/local/pinacotron/pigallery.json
 	docker rm -f pinacotron_gallery || true
 	docker run \
 		--name pinacotron_gallery \
 		-d \
 		-p $${GALLERY_PORT-8000}:80 \
 		-e NODE_ENV=production \
-		-e PUID=$${HOST_UID-1000} \
-		-e GUID=$${HOST_GID-1000} \
+		-e PUID=`id -u` \
+		-e GUID=`id -g` \
 		-v $$GALLERY_IMAGES_DIR/pigallery.json:/pigallery2-release/config.json \
 		-v $$GALLERY_IMAGES_DIR:/pigallery2-release/pinacotron/images \
 		bpatrik/pigallery2:1.7.0-stretch
@@ -33,7 +32,6 @@ init: ## Creates stub configuration
 	echo "-s large -l 5" >> /etc/pinacotron/collections/mycollection/parameters.txt
 	mkdir -p /etc/pinacotron/words
 	echo "hello world" >> /etc/pinacotron/words/default.txt
-	chown -R $${HOST_UID-1000}:$${HOST_GID-1000} /etc/pinacotron/
 
 posters: ## Combine words and images into posters
 	/usr/local/bin/posters

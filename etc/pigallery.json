@@ -13,7 +13,7 @@
             "personThumbnailSize": 200
         },
         "Search": {
-            "enabled": true,
+            "enabled": false,
             "instantSearchEnabled": true,
             "InstantSearchTimeout": 3000,
             "searchCacheTimeout": 3600000,
@@ -59,13 +59,13 @@
             }
         },
         "Faces": {
-            "enabled": true,
+            "enabled": false,
             "keywordsToPersons": true,
             "writeAccessMinRole": 4
         },
         "authenticationRequired": false,
         "unAuthenticatedUserRole": 4,
-        "publicUrl": "http://pinacotron.localhost",
+        "publicUrl": "http://localhost:8000",
         "urlBase": "",
         "languages": []
     },

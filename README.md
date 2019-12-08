@@ -5,7 +5,9 @@
 - Create a dedicated directory :
 
   ```sh
-  mkdir myproject
+  mkdir -p myproject
+  cd myproject
+  mkdir -p etc/pinacotron var
   ```
 
 - Bootstrap configuration :
@@ -40,6 +42,7 @@
     -e GALLERY_IMAGES_DIR=$PWD/var \
     -e HOST_UID=$(id -u) \
     -e HOST_GID=$(id -g) \
+    --group-add=$(stat -c '%g' /var/run/docker.sock) \
     constructionsincongrues/pinacotron \
     gallery-start
   ```
@@ -73,8 +76,6 @@ Starts a web image gallery service on <http://localhost:8000>.
 
 - `GALLERY_IMAGES_DIR`
 - `GALLERY_PORT=8000`
-- `HOST_GID`
-- `HOST_UID`
 
 ##### Examples
 
@@ -84,8 +85,7 @@ docker run \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v ${PWD}/var:/var/local/pinacotron/ \
     -e GALLERY_IMAGES_DIR=$PWD/var \
-    -e HOST_UID=$(id -u) \
-    -e HOST_GID=$(id -g) \
+    --group-add=$(stat -c '%g' /var/run/docker.sock) \
     constructionsincongrues/pinacotron \
     gallery-start
 ```
@@ -100,6 +100,7 @@ Stops the web image gallery service.
 docker run \
     --rm \
     -v /var/run/docker.sock:/var/run/docker.sock \
+    --group-add=$(stat -c '%g' /var/run/docker.sock) \
     constructionsincongrues/pinacotron \
     gallery-stop
 ```
