@@ -5,16 +5,17 @@ VOLUME [ "/etc/pinacotron" ]
 
 WORKDIR /usr/local/src/pinacotron
 
+ENV PINACOTRON_ANNOTATE_FORMATS='pdf'
+ENV PINACOTRON_ANNOTATE_PROFILE='default'
+ENV PINACOTRON_ANNOTATE_WORDS='default.txt'
 ENV PINACOTRON_DOWNLOAD_PURGE=0
-ENV PINACOTRON_POSTERS_CONVERT_PARAMETERS='-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0'
-ENV PINACOTRON_POSTERS_FORMATS='pdf'
-ENV PINACOTRON_POSTERS_WORDS='default.txt'
 
 RUN apk --update --no-cache add \
         bash \
         curl \
         docker \
         imagemagick \
+        jq \
         make \
         msttcorefonts-installer \
         poppler-utils && \

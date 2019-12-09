@@ -58,7 +58,7 @@ function pinacotron__help() {
     echo "    help:       Show this help"
     echo "    init:       Initialize stub configuration"
     echo "    download:   Download collections images"
-    echo "    posters:    Generate posters"
+    echo "    annotate:   Annotates images with text"
     echo "    selfupdate: Upgrade Pinacotron to its latest version"
     echo "    version:    Show the Pinacotron version information"
 }
@@ -93,21 +93,24 @@ pinacotron__download() {
         download PINACOTRON_DOWNLOAD_PURGE=${PINACOTRON_DOWNLOAD_PURGE}
 }
 
-function pinacotron__posters() {
+function pinacotron__annotate() {
     OPTIND=2
-    while getopts "Pc:f:i:w:" option; do
+    while getopts "Pc:f:i:p:w:" option; do
         case "${option}" in
             c)
-                PINACOTRON_POSTERS_CONVERT_PARAMETERS=${OPTARG}
+                PINACOTRON_ANNOTATE_CONVERT_PARAMETERS=${OPTARG}
                 ;;
             f)
-                PINACOTRON_POSTERS_FORMATS=${OPTARG}
+                PINACOTRON_ANNOTATE_FORMATS=${OPTARG}
                 ;;
             i)
-                PINACOTRON_POSTERS_RUNID=${OPTARG}
+                PINACOTRON_ANNOTATE_RUNID=${OPTARG}
+                ;;
+            p)
+                PINACOTRON_ANNOTATE_PROFILE=${OPTARG}
                 ;;
             w)
-                PINACOTRON_POSTERS_WORDS=${OPTARG}
+                PINACOTRON_ANNOTATE_WORDS=${OPTARG}
                 ;;
             *)
                 exit
@@ -119,11 +122,12 @@ function pinacotron__posters() {
         -v ${PWD}/etc/pinacotron:/etc/pinacotron \
         -v ${PWD}/var:/var/local/pinacotron \
         ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
-        posters \
-        PINACOTRON_POSTERS_CONVERT_PARAMETERS="${PINACOTRON_POSTERS_CONVERT_PARAMETERS-'-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0'}" \
-        PINACOTRON_POSTERS_FORMATS="${PINACOTRON_POSTERS_FORMATS-pdf}" \
-        PINACOTRON_POSTERS_RUNID="${PINACOTRON_POSTERS_RUNID-$(date +%Y%m%d_%H%M%s)}" \
-        PINACOTRON_POSTERS_WORDS="${PINACOTRON_POSTERS_WORDS-default.txt}"
+        annotate \
+        PINACOTRON_ANNOTATE_CONVERT_PARAMETERS="${PINACOTRON_ANNOTATE_CONVERT_PARAMETERS-'-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0'}" \
+        PINACOTRON_ANNOTATE_FORMATS="${PINACOTRON_ANNOTATE_FORMATS-pdf}" \
+        PINACOTRON_ANNOTATE_PROFILE="${PINACOTRON_ANNOTATE_PROFILE-default}" \
+        PINACOTRON_ANNOTATE_RUNID="${PINACOTRON_ANNOTATE_RUNID-$(date +%Y%m%d_%H%M%s)}" \
+        PINACOTRON_ANNOTATE_WORDS="${PINACOTRON_ANNOTATE_WORDS-default.txt}"
 }
 
 function pinacotron__selfupdate() {

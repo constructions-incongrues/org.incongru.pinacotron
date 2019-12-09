@@ -4,7 +4,8 @@ services:
   pinacotron:
     build: .
     volumes:
-      - ${PINACOTRON_PROFILE-./etc/fixtures}:/etc/pinacotron
+      - ./etc/fixtures:/etc/pinacotron
+      - ./etc/pinacotron/profiles/${PINACOTRON_PROFILE-default}.json:/etc/pinacotron/profiles/${PINACOTRON_PROFILE-default}.json
       - ${PINACOTRON_VAR-./var}:/var/local/pinacotron/
 
   pigallery:
