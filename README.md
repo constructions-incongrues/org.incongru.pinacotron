@@ -34,109 +34,14 @@ sudo chmod +x /usr/local/bin/pinacotron
   pinacotron gallery start
   ```
 
-- Browse image gallery service :
-
-  ```sh
-  pinacotron gallery browse
-  ```
-
 ## Usage
 
-### Configuration files
-
-- `etc/pinacotron/collections/<collection>/keywords.txt`
-- `etc/pinacotron/collections/<collection>/parameters.txt`
-- `etc/pinacotron/words/words.txt`
-
-### Commands
-
-#### help
-
-Displays help.
+### Display commands help
 
 ```sh
+# Global help
 pinacotron help
-```
 
-#### gallery start
-
-Starts a web image gallery service on <http://localhost:8000>.
-
-##### Parameters
-
-- `-p` : Image gallery port (default : `8000`)
-
-##### Examples
-
-```sh
-# Default configuration
-pinacotron gallery start
-
-# Custom port
-pinacotron gallery start -p 9000
-```
-
-#### gallery stop
-
-Stops the web image gallery service.
-
-##### Examples
-
-```sh
-pinacotron gallery stop
-```
-
-#### download
-
-Downloads images from collections.
-
-##### Parameters
-
-- `-P` : Purge images folder
-
-##### Examples
-
-```sh
-pinacotron download
-```
-
-#### init
-
-Creates a stub configuration.
-
-##### Examples
-
-```sh
-pinacotron init
-```
-
-#### annotate
-
-Combine images with words.
-
-##### Parameters
-
-- `-c` : Convert parameters for text (default : `-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0`)
-- `-P` : Purge annotate folder
-- `-w` : List of words in `words/` directory (default : `default.txt`)
-
-##### Examples
-
-```sh
-# Default configuration
-pinacotron annotate
-
-# Purge existing annotate
-pinacotron annotate -P
-
-## Red text
-pinacotron annotate -c '-gravity South -pointsize 196 -stroke black -fill "#FF0000" -colorspace Gray -separate -average -annotate 0'
-```
-
-#### version
-
-Show Pinacotron version information.
-
-```sh
-pinacotron version
+# Help for a specific command
+pinacotron help <command>
 ```
