@@ -11,12 +11,7 @@
             "annotate":    "0"
         },
         "formats": {
-            "pdf": {
-                "density": "300",
-                 "page": "A4",
-                 "resize": "1500x2185!"
-            },
-            "png": {
+            "default": {
                 "density": "300",
                  "page": "A4",
                  "resize": "1500x2185!"

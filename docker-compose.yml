@@ -4,7 +4,7 @@ services:
   pinacotron:
     build: .
     volumes:
-      - ./etc/fixtures:/etc/pinacotron
+      - ./etc/pinacotron:/etc/pinacotron
       - ./etc/pinacotron/profiles/${PINACOTRON_PROFILE-default}.json:/etc/pinacotron/profiles/${PINACOTRON_PROFILE-default}.json
       - ${PINACOTRON_VAR-./var}:/var/local/pinacotron/
 
@@ -16,7 +16,7 @@ services:
       - "traefik.http.routers.front.rule=Host(`pinacotron.localhost`)"
       - "traefik.http.services.front.loadbalancer.server.port=80"
     volumes:
-      - ./etc/pigallery.json:/pigallery2-release/config.json:ro
+      - ./etc/skel/pigallery.json:/pigallery2-release/config.json:ro
       - ${PINACOTRON_VAR-./var}:/pigallery2-release/pinacotron/images
 
   traefik:
