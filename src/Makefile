@@ -35,7 +35,7 @@ gallery-stop: ## Stops the local web gallery
 	docker rm -f pinacotron_gallery
 
 init: ## Creates stub configuration
-	mkdir -p /var/local/pinacotron/images /var/local/pinacotron/posters /var/local/pinacotron/posters/pdf /var/local/pinacotron/posters/png
+	mkdir -p /var/local/pinacotron/images /var/local/pinacotron/annotate
 	mkdir -p /etc/pinacotron/collections/mycollection
 	echo "lovely kitten" > /etc/pinacotron/collections/mycollection/keywords.txt
 	echo "adorable baby dog" >> /etc/pinacotron/collections/mycollection/keywords.txt

@@ -110,27 +110,27 @@ Creates a stub configuration.
 pinacotron init
 ```
 
-#### posters
+#### annotate
 
 Combine images with words.
 
 ##### Parameters
 
 - `-c` : Convert parameters for text (default : `-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0`)
-- `-P` : Purge posters folder
+- `-P` : Purge annotate folder
 - `-w` : List of words in `words/` directory (default : `default.txt`)
 
 ##### Examples
 
 ```sh
 # Default configuration
-pinacotron posters
+pinacotron annotate
 
-# Purge existing posters
-pinacotron posters -P
+# Purge existing annotate
+pinacotron annotate -P
 
 ## Red text
-pinacotron posters -c '-gravity South -pointsize 196 -stroke black -fill "#FF0000" -colorspace Gray -separate -average -annotate 0'
+pinacotron annotate -c '-gravity South -pointsize 196 -stroke black -fill "#FF0000" -colorspace Gray -separate -average -annotate 0'
 ```
 
 #### version
