@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/constructions-incongrues/org.incongru.pinacotron/tree/1.3.0) (2019-12-09)
+
+[Full Changelog](https://github.com/constructions-incongrues/org.incongru.pinacotron/compare/1.2.0...1.3.0)
+
+**Merged pull requests:**
+
+- \[commands\] Implemented an extensible command system + revamped existing commands [\#1](https://github.com/constructions-incongrues/org.incongru.pinacotron/pull/1) ([trivoallan](https://github.com/trivoallan))
+
+## [1.2.0](https://github.com/constructions-incongrues/org.incongru.pinacotron/tree/1.2.0) (2019-12-08)
+
+[Full Changelog](https://github.com/constructions-incongrues/org.incongru.pinacotron/compare/1.1.0...1.2.0)
+
 ## [1.1.0](https://github.com/constructions-incongrues/org.incongru.pinacotron/tree/1.1.0) (2019-12-08)
 
 [Full Changelog](https://github.com/constructions-incongrues/org.incongru.pinacotron/compare/1.0.0...1.1.0)

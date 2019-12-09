@@ -1,4 +1,0 @@
-cats
-dogs
-goats
-platypus

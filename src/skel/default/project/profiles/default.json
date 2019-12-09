@@ -1,0 +1,21 @@
+{
+    "annotate": {
+        "annotate": {
+            "average":     null,
+            "colorspace":  "Gray",
+            "fill":        "#FFFFFF",
+            "gravity":     "South",
+            "pointsize":   "196",
+            "separate":    null,
+            "stroke":      "#000000",
+            "annotate":    "0"
+        },
+        "formats": {
+            "default": {
+                "density": "300",
+                 "page": "A4",
+                 "resize": "1500x2185!"
+            }
+        }
+    }
+}
