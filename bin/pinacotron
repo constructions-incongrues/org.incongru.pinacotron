@@ -4,148 +4,33 @@ set -e
 PINACOTRON_REPOSITORY=${PINACOTRON_REPOSITORY:-constructionsincongrues/pinacotron}
 PINACOTRON_TAG=${PINACOTRON_TAG:-latest}
 
-function pinacotron__gallery() {
-    if [ -z "$2" ]; then \
-        echo "pinacotron gallery <browse|start|status|stop>"
-        exit 255
+function pinacotron() {
+    ALL_PARAMETERS=$*
+    COMMAND=${1}
+    SUBCOMMAND=${2}
+    STRIP_PREFIX=$(echo "${COMMAND} ${SUBCOMMAND}" | sed 's/ *$//g')
+    if [[ ${SUBCOMMAND} == *"="* ]]; then \
+        SUBCOMMAND=execute; \
+        STRIP_PREFIX=$(echo "${COMMAND}" | sed 's/ *$//g'); \
     fi
-    case $2 in
-    start)
-        OPTIND=3
-        while getopts ":p:" option; do
-            case "${option}" in
-                p)
-                    GALLERY_PORT=${OPTARG}
-                    ;;
-                *)
-                    echo "pinacotron gallery start -p <port>"
-                    exit
-                    ;;
-            esac
-        done
-        docker run \
-            --rm \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -v ${PWD}/var:/var/local/pinacotron/ \
-            -e GALLERY_IMAGES_DIR=${PWD}/var \
-            -e GALLERY_PORT=${GALLERY_PORT-8000} \
-            --group-add="$(stat -c '%g' /var/run/docker.sock)" \
-            ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
-            gallery-start
-        ;;
-    stop)
-        docker run \
-            --rm \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            --group-add="$(stat -c '%g' /var/run/docker.sock)" \
-            ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
-            gallery-stop
-        ;;
-    status)
-        docker inspect -f '{{ .State.Status }}' pinacotron_gallery
-        ;;
-    browse)
-        xdg-open http://localhost:8000
-        ;;
-    esac
-    }
-
-function pinacotron__help() {
-    echo "Pinacotron usage documentation"
-    echo
-    echo "Available commands:"
-    echo "    gallery:    Control gallery web service"
-    echo "    help:       Show this help"
-    echo "    init:       Initialize stub configuration"
-    echo "    download:   Download collections images"
-    echo "    annotate:   Annotates images with text"
-    echo "    selfupdate: Upgrade Pinacotron to its latest version"
-    echo "    version:    Show the Pinacotron version information"
-}
-
-pinacotron__init() {
-    mkdir -pv ${PWD}/etc/pinacotron ${PWD}/var
+    mkdir -p "${PWD}/etc/pinacotron" "${PWD}/var"
     docker run \
         --rm \
-        -v ${PWD}/etc/pinacotron:/etc/pinacotron \
-        -v ${PWD}/var:/var/local/pinacotron \
-        ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
-        init
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v "${PWD}/etc/pinacotron":/etc/pinacotron \
+        -v "${PWD}/var":/var/local/pinacotron/ \
+        -e PINACOTRON_HOST_PWD="${PWD}" \
+        --group-add="$(stat -c '%g' /var/run/docker.sock)" \
+        "${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG}" \
+        "${COMMAND}" PINACOTRON_SUBCOMMAND_NAME="${SUBCOMMAND:-execute}" ${ALL_PARAMETERS#${STRIP_PREFIX}}
 }
 
-pinacotron__download() {
-    OPTIND=2
-    while getopts "P" option; do
-        case "${option}" in
-            P)
-                PINACOTRON_DOWNLOAD_PURGE=1
-                ;;
-            *)
-                exit
-                ;;
-        esac
-    done
-    docker run \
-        --rm \
-        -v ${PWD}/etc/pinacotron:/etc/pinacotron \
-        -v ${PWD}/var:/var/local/pinacotron \
-        ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
-        download PINACOTRON_DOWNLOAD_PURGE=${PINACOTRON_DOWNLOAD_PURGE}
-}
-
-function pinacotron__annotate() {
-    OPTIND=2
-    while getopts "Pc:f:i:p:w:" option; do
-        case "${option}" in
-            c)
-                PINACOTRON_ANNOTATE_CONVERT_PARAMETERS=${OPTARG}
-                ;;
-            f)
-                PINACOTRON_ANNOTATE_FORMATS=${OPTARG}
-                ;;
-            i)
-                PINACOTRON_ANNOTATE_RUNID=${OPTARG}
-                ;;
-            p)
-                PINACOTRON_ANNOTATE_PROFILE=${OPTARG}
-                ;;
-            w)
-                PINACOTRON_ANNOTATE_WORDS=${OPTARG}
-                ;;
-            *)
-                exit
-                ;;
-        esac
-    done
-    docker run \
-        --rm \
-        -v ${PWD}/etc/pinacotron:/etc/pinacotron \
-        -v ${PWD}/var:/var/local/pinacotron \
-        ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
-        annotate \
-        PINACOTRON_ANNOTATE_CONVERT_PARAMETERS="${PINACOTRON_ANNOTATE_CONVERT_PARAMETERS-'-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0'}" \
-        PINACOTRON_ANNOTATE_FORMATS="${PINACOTRON_ANNOTATE_FORMATS-pdf}" \
-        PINACOTRON_ANNOTATE_PROFILE="${PINACOTRON_ANNOTATE_PROFILE-default}" \
-        PINACOTRON_ANNOTATE_RUNID="${PINACOTRON_ANNOTATE_RUNID-$(date +%Y%m%d_%H%M%s)}" \
-        PINACOTRON_ANNOTATE_WORDS="${PINACOTRON_ANNOTATE_WORDS-default.txt}"
-}
-
-function pinacotron__selfupdate() {
-    docker pull ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG}
-}
-
-function pinacotron__version() {
-    docker run \
-        --rm \
-        ${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG} \
-        version
-}
-
-# make sure we actually *did* get passed a valid function name
 if declare -f "pinacotron__$1" >/dev/null 2>&1; then
-  # invoke that function, passing arguments through
-  "pinacotron__$1" "$@" # same as "$1" "$2" "$3" ... for full argument list
+    "pinacotron__$1" "$@"
 else
-  pinacotron__help
-  exit 255
+    if [ -z "$1"  ]; then
+        pinacotron "help"
+    else
+        pinacotron "$@"
+    fi
 fi

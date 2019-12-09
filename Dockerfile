@@ -5,12 +5,8 @@ VOLUME [ "/etc/pinacotron" ]
 
 WORKDIR /usr/local/src/pinacotron
 
-ENV PINACOTRON_ANNOTATE_FORMATS='pdf'
-ENV PINACOTRON_ANNOTATE_PROFILE='default'
-ENV PINACOTRON_ANNOTATE_WORDS='default.txt'
-ENV PINACOTRON_DOWNLOAD_PURGE=0
-
 RUN apk --update --no-cache add \
+        gawk \
         bash \
         curl \
         docker \
@@ -31,10 +27,9 @@ RUN USER=pinacotron && \
     mkdir -p /etc/fixuid && \
     printf "user: $USER\ngroup: $GROUP\n" > /etc/fixuid/config.yml
 
-COPY --chown=pinacotron:pinacotron ./src/actions /usr/local/src/pinacotron/actions/
-COPY ./src/Makefile /usr/local/src/pinacotron/Makefile
-COPY ./etc/pigallery.json /etc/pigallery.json
+COPY --chown=pinacotron:pinacotron ./src /usr/local/src/pinacotron/
 
+ARG DOCKER_TAG
 ENV PINACOTRON_VERSION=${DOCKER_TAG}
 
 RUN mkdir -p /var/local/pinacotron /usr/local/src/pinacotron /etc/pinacotron && \
