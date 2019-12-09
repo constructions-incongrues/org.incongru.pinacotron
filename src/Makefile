@@ -1,18 +1,20 @@
+.PHONY: actions
 SHELL=/usr/bin/env bash
-PINACOTRON_ACTIONS=`ls -1 /usr/local/bin/pinacotron-* | tr '\n' '\0' | sed 's/pinacotron-//' | xargs -0 -n 1 basename`
-PINACOTRON_ACTIONS := images posters
+PINACOTRON_ACTIONS := $(shell ls -A1 ./actions)
+log = printf "\e[1m[%-10s]\e[0m %-50s (%s)\n" "$(1)" "$(2)" "$(3)"
 
 help: ## Show help
 	grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 $(PINACOTRON_ACTIONS): %: ## Executes the action
-	@echo -e "\e[1m[action/$*]\e[0m Starting"
-	@/usr/local/bin/pinacotron-$*
-	@echo -e "\e[1m[action/$*]\e[0m Done"
+	@$(call log,actions,Executing action,action='$*')
+	@make -s --no-print-directory -C /usr/local/src/pinacotron/actions/$* execute
+	@$(call log,actions,Action execution complete,action='$*')
 
 actions: ## Lists available actions
 	@echo "Available actions :"
-	@$(foreach ACTION,$(PINACOTRON_ACTIONS),echo "   $(ACTION)";)
+	@echo
+	@$(foreach ACTION,$(PINACOTRON_ACTIONS),make -s --no-print-directory -C /usr/local/src/pinacotron/actions/$(ACTION) help;)
 
 gallery-start: ## Starts a local web gallery for browsing images
 	if [ ! -f "/var/local/pinacotron/pigallery.json" ]; then cp /etc/pigallery.json /var/local/pinacotron/; fi

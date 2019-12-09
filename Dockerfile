@@ -5,9 +5,9 @@ VOLUME [ "/etc/pinacotron" ]
 
 WORKDIR /usr/local/src/pinacotron
 
-ENV PINACOTRON_IMAGES_PURGE=0
+ENV PINACOTRON_DOWNLOAD_PURGE=0
 ENV PINACOTRON_POSTERS_CONVERT_PARAMETERS='-gravity South -pointsize 196 -stroke black -fill "#FFFFFF" -colorspace Gray -separate -average -annotate 0'
-ENV PINACOTRON_POSTERS_PURGE=0
+ENV PINACOTRON_POSTERS_FORMATS='pdf'
 ENV PINACOTRON_POSTERS_WORDS='default.txt'
 
 RUN apk --update --no-cache add \
@@ -30,13 +30,8 @@ RUN USER=pinacotron && \
     mkdir -p /etc/fixuid && \
     printf "user: $USER\ngroup: $GROUP\n" > /etc/fixuid/config.yml
 
-COPY --chown=pinacotron:pinacotron ./src/actions/images /usr/local/bin/pinacotron-images
-COPY --chown=pinacotron:pinacotron ./src/actions/posters /usr/local/bin/pinacotron-posters
-RUN chmod +x /usr/local/bin/pinacotron-images
-RUN chmod +x /usr/local/bin/pinacotron-posters
-
+COPY --chown=pinacotron:pinacotron ./src/actions /usr/local/src/pinacotron/actions/
 COPY ./src/Makefile /usr/local/src/pinacotron/Makefile
-
 COPY ./etc/pigallery.json /etc/pigallery.json
 
 ENV PINACOTRON_VERSION=${DOCKER_TAG}

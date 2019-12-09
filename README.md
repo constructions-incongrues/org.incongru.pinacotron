@@ -25,7 +25,7 @@ sudo chmod +x /usr/local/bin/pinacotron
 - Download collection images :
 
   ```sh
-  pinacotron images
+  pinacotron download
   ```
 
 - Start image gallery service :
@@ -86,7 +86,7 @@ Stops the web image gallery service.
 pinacotron gallery stop
 ```
 
-#### images
+#### download
 
 Downloads images from collections.
 
@@ -97,7 +97,7 @@ Downloads images from collections.
 ##### Examples
 
 ```sh
-pinacotron gallery stop
+pinacotron download
 ```
 
 #### init
