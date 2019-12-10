@@ -1,6 +1,6 @@
-
 # Makefile configuration
 SHELL=/usr/bin/env bash
+.PHONY: jekyll
 
 # Helpers
 PINACOTRON_COMMANDS := $(shell ls -A1 ./commands)

@@ -13,13 +13,14 @@ function pinacotron() {
         SUBCOMMAND=execute; \
         STRIP_PREFIX=$(echo "${COMMAND}" | sed 's/ *$//g'); \
     fi
-    mkdir -p "${PWD}/etc/pinacotron" "${PWD}/var"
+    mkdir -p "${PWD}/etc/pinacotron" "${PWD}/var" "${PWD}/src/jekyll"
     docker run \
-        -it \
         --group-add="$(stat -c '%g' /var/run/docker.sock)" \
         --rm \
         -e PINACOTRON_HOST_PWD="${PWD}" \
+        -it \
         -v "${PWD}/etc/pinacotron":/etc/pinacotron \
+        -v "${PWD}/src/jekyll":/usr/local/src/pinacotron/jekyll \
         -v "${PWD}/var":/var/local/pinacotron/ \
         -v /var/run/docker.sock:/var/run/docker.sock \
         "${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG}" \
