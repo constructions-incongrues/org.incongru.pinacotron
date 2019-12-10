@@ -10,6 +10,7 @@ RUN apk --update --no-cache add \
         bash \
         curl \
         docker \
+        git \
         imagemagick \
         jq \
         make \

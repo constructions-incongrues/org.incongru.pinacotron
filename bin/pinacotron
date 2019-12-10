@@ -15,12 +15,13 @@ function pinacotron() {
     fi
     mkdir -p "${PWD}/etc/pinacotron" "${PWD}/var"
     docker run \
+        -it \
+        --group-add="$(stat -c '%g' /var/run/docker.sock)" \
         --rm \
-        -v /var/run/docker.sock:/var/run/docker.sock \
+        -e PINACOTRON_HOST_PWD="${PWD}" \
         -v "${PWD}/etc/pinacotron":/etc/pinacotron \
         -v "${PWD}/var":/var/local/pinacotron/ \
-        -e PINACOTRON_HOST_PWD="${PWD}" \
-        --group-add="$(stat -c '%g' /var/run/docker.sock)" \
+        -v /var/run/docker.sock:/var/run/docker.sock \
         "${PINACOTRON_REPOSITORY}:${PINACOTRON_TAG}" \
         "${COMMAND}" PINACOTRON_SUBCOMMAND_NAME="${SUBCOMMAND:-execute}" ${ALL_PARAMETERS#${STRIP_PREFIX}}
 }
