@@ -12,7 +12,7 @@ JEKYLL_IMAGES_DIRECTORY := photos/pinacotron ## Relative path to images director
 JEKYLL_PORT := 8001 ## Preview server port
 JEKYLL_PROJECT := default ## Project name
 JEKYLL_SCRIPT := setup.command ## Relative path to script
-JEKYLL_SOURCE_IMAGES := ../../../annotate/jekyll/png ## Relative path to Pinacotron images
+JEKYLL_SOURCE_IMAGES := /var/local/pinacotron/annotate/jekyll/png ## Relative path to Pinacotron images
 JEKYLL_VERSION := 4.0.0 ## Jekyll version
 
 # Other Jekyll themes
@@ -67,33 +67,33 @@ build:
 		-e JEKYLL_GID=$$(id -u) \
 		-e JEKYLL_UID=$$(id -u) \
 		-e VERBOSE=true \
-		-v "$$PINACOTRON_HOST_PWD/var:/srv" \
-		-v "$$PINACOTRON_HOST_PWD/var/jekyll:/srv/jekyll" \
+		-v "$$PINACOTRON_HOST_PWD/var:/var/local/pinacotron" \
+		-v "$$PINACOTRON_HOST_PWD/src/jekyll:/srv/jekyll" \
 		jekyll/jekyll:$(strip $(JEKYLL_VERSION)) \
 		jekyll build \
 			--source /srv/jekyll/$(strip $(JEKYLL_PROJECT)) \
-			--destination /srv/jekyll/$(strip $(JEKYLL_PROJECT))/_site \
+			--destination /var/local/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/_site \
 			--quiet > /dev/null
 	@$(call log,/build,project build complete,jekyll_version='$(strip $(JEKYLL_VERSION))')
 
 init:
-	@$(call log,/init,Initializing Jekyll project,project='$(strip $(JEKYLL_PROJECT))'$(comma) (strip $(JEKYLL_THEME_GIT_URL))')
-	@git clone --depth 1 --quiet $(strip $(JEKYLL_THEME_GIT_URL)) /var/local/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))
-	@rm -rf /var/local/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/.git /var/local/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/photos/*
-	@cp /usr/local/src/pinacotron/skel/jekyll/_config.yml /var/local/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/_config.yml
+	@$(call log,/init,Initializing Jekyll project,project='$(strip $(JEKYLL_PROJECT))'$(comma) $(strip $(JEKYLL_THEME_GIT_URL))')
+	@git clone --depth 1 --quiet $(strip $(JEKYLL_THEME_GIT_URL)) /usr/local/src/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))
+	@rm -rf /usr/local/src/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/.git /usr/local/src/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/photos/*
+	@cp /usr/local/src/pinacotron/skel/jekyll/_config.yml /usr/local/src/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/_config.yml
 	@$(MAKE) link
 	@$(MAKE) script
 	@$(call log,/init,Jekyll project initialization complete,project='$(strip $(JEKYLL_PROJECT))'$(comma) git_url='$(strip $(JEKYLL_THEME_GIT_URL))')
 
 link:
 	@$(call log,/link,Linking Pinacotron images to project,project='$(strip $(JEKYLL_PROJECT))'$(comma) src='$(strip $(JEKYLL_SOURCE_IMAGES))'$(comma) dest='$(strip $(JEKYLL_IMAGES_DIRECTORY))')
-	@mkdir -p $$(dirname "/var/local/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/$(strip $(JEKYLL_IMAGES_DIRECTORY))")
-	@ln -sf $(strip $(JEKYLL_SOURCE_IMAGES)) /var/local/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/$(strip $(JEKYLL_IMAGES_DIRECTORY))
+	@mkdir -p $$(dirname "/usr/local/src/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/$(strip $(JEKYLL_IMAGES_DIRECTORY))")
+	@ln -sf $(strip $(JEKYLL_SOURCE_IMAGES)) /usr/local/src/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/$(strip $(JEKYLL_IMAGES_DIRECTORY))
 
 script:
-	@if [ -f "/var/local/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/$(strip $(JEKYLL_SCRIPT))" ]; then \
+	@if [ -f "/usr/local/src/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/$(strip $(JEKYLL_SCRIPT))" ]; then \
 		$(call log,/script,project='$(strip $(JEKYLL_PROJECT))'$(comma) Executing script,path='$(strip $(JEKYLL_SCRIPT))'); \
-		/var/local/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/$(strip $(JEKYLL_SCRIPT)); \
+		/usr/local/src/pinacotron/jekyll/$(strip $(JEKYLL_PROJECT))/$(strip $(JEKYLL_SCRIPT)); \
 		$(call log,/script,Script execution complete,project='$(strip $(JEKYLL_PROJECT))'$(comma) path='$(strip $(JEKYLL_SCRIPT))'); \
 	else \
 		$(call log,/script,Script not found,project='$(strip $(JEKYLL_PROJECT))'$(comma) path='$(strip $(JEKYLL_SCRIPT))'); \
