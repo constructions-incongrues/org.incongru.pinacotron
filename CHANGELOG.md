@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/constructions-incongrues/org.incongru.pinacotron/tree/1.4.0) (2019-12-11)
+
+[Full Changelog](https://github.com/constructions-incongrues/org.incongru.pinacotron/compare/1.3.0...1.4.0)
+
+**Merged pull requests:**
+
+- \[commands\] Added "jekyll" command [\#2](https://github.com/constructions-incongrues/org.incongru.pinacotron/pull/2) ([trivoallan](https://github.com/trivoallan))
+
 ## [1.3.0](https://github.com/constructions-incongrues/org.incongru.pinacotron/tree/1.3.0) (2019-12-09)
 
 [Full Changelog](https://github.com/constructions-incongrues/org.incongru.pinacotron/compare/1.2.0...1.3.0)
