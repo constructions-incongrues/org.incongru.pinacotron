@@ -1,6 +1,6 @@
 # Command specification
 COMMAND_NAME := $(notdir $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST)))))
-COMMAND_DESCRIPTION := Displays Pinacotron version information
+COMMAND_DESCRIPTION := Initializes a new Pinacotron project
 
 # Command options
 INIT_SKEL := default ## Base skel name
