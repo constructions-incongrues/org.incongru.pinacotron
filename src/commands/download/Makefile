@@ -3,7 +3,7 @@ COMMAND_NAME := $(notdir $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST)
 COMMAND_DESCRIPTION := Downloads images from collections
 
 # Command options
-DOWNLOAD_PURGE = 0 ## Deletes download folder contents
+DOWNLOAD_PURGE := 0 ## Deletes download folder contents
 
 # Helpers
 log = printf "\e[1m[%-8s]\e[0m %-50s (%s)\n" "$(COMMAND_NAME)" "$(1)" "$(2)"
