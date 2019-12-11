@@ -28,6 +28,6 @@ help.options:
 
 # Command
 execute:
-	$(call log,Updating Pinacotron image,repository='$(strip $(IMAGE_REPOSITORY))'$(comma) tag='$(strip $(IMAGE_TAG))');
+	$(call log,Updating Pinacotron,repository='$(strip $(IMAGE_REPOSITORY))'$(comma) tag='$(strip $(IMAGE_TAG))');
 	@docker pull $(strip $(IMAGE_REPOSITORY)):$(strip $(IMAGE_TAG)) > /dev/null
 	$(call log,Pinacotron update complete,repository='$(strip $(IMAGE_REPOSITORY))'$(comma) tag='$(strip $(IMAGE_TAG))');
