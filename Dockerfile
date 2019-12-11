@@ -30,8 +30,8 @@ RUN USER=pinacotron && \
 
 COPY --chown=pinacotron:pinacotron ./src /usr/local/src/pinacotron/
 
-ARG DOCKER_TAG
-ENV PINACOTRON_VERSION=${DOCKER_TAG}
+ARG PINACOTRON_VERSION=1.4.0
+ENV PINACOTRON_VERSION=${PINACOTRON_VERSION}
 
 RUN mkdir -p /var/local/pinacotron /usr/local/src/pinacotron /etc/pinacotron && \
     chown -R pinacotron:pinacotron /var/local/pinacotron /usr/local/src/pinacotron /etc/pinacotron
