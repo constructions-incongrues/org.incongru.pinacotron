@@ -6,6 +6,7 @@ COMMAND_DESCRIPTION := Downloads images from collections
 DOWNLOAD_PURGE := 0 ## Deletes download folder contents
 
 # Helpers
+comma:= ,
 log = printf "\e[1m[%-8s]\e[0m %-50s (%s)\n" "$(COMMAND_NAME)" "$(1)" "$(2)"
 
 # Help rules
@@ -36,8 +37,10 @@ execute:
 		if [ ! -d "/var/local/pinacotron/download/$$(basename $$COLLECTION)" ]; then \
 			$(call log,Images folder missing : downloading images,collection='$$(basename $$COLLECTION)'); \
 			googleimagesdownload `cat $$COLLECTION/parameters.txt` -kf $$COLLECTION/keywords.txt -o "/var/local/pinacotron/download/$$(basename $$COLLECTION)"; \
+			$(call log,Fixing up images filenames,collection='$$(basename $$COLLECTION)'); \
+			rename 'use URI::Escape; $$_ = uri_unescape $$_' /var/local/pinacotron/download/*/*/*.*; \
 		else \
 			$(call log,Images folder found : skipping,collection='$$(basename $$COLLECTION)'); \
 		fi; \
-		$(call log,Done processing collection,collection='$$(basename $$COLLECTION)'); \
+		$(call log,Done processing collection,collection='$$(basename $$COLLECTION)'$(comma) num_images='$$(find /var/local/pinacotron/download/$$(basename $$COLLECTION) -type f | wc -l)'); \
 	done

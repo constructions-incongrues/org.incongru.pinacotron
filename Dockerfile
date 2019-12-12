@@ -15,7 +15,13 @@ RUN apk --update --no-cache add \
         jq \
         make \
         msttcorefonts-installer \
-        poppler-utils && \
+        perl \
+        poppler-utils \
+        tar && \
+    perl -MCPAN -e'install URI::Escape' && \
+    curl -SsL "http://search.cpan.org/CPAN/authors/id/P/PE/PEDERST/rename-1.9.tar.gz" | tar -xzf - && \
+        ( cd "rename-1.9"; perl "Makefile.PL"; make && make install ) && \
+        rm -rf "rename-1.9" && \
     update-ms-fonts
 
 RUN addgroup -g 1000 pinacotron && \
