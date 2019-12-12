@@ -25,7 +25,7 @@ sudo chmod +x /usr/local/bin/pinacotron
 - Download collection images :
 
   ```sh
-  pinacotron download
+  pinacotron google
   ```
 
 - Start image gallery service :

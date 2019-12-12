@@ -28,7 +28,7 @@ help.options:
 # Command
 execute:
 	@$(call log,Initializing new project from skel,skel='$(strip $(INIT_SKEL))'); \
-	if [ -d "/etc/pinacotron/collections" ]; then \
+	if [ -d "/etc/pinacotron/google/collections" ]; then \
 		$(call log,Project has already been initialized. Aborting,skel='$(strip $(INIT_SKEL))'); \
 	else \
 		cp -R /usr/local/src/pinacotron/skel/$(strip $(INIT_SKEL))/project/* /etc/pinacotron/; \

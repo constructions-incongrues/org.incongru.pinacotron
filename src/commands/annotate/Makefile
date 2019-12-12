@@ -36,7 +36,7 @@ execute:
 	for FORMAT in $(strip $(ANNOTATE_FORMATS)); do \
 		mkdir -p "/var/local/pinacotron/annotate/$$ANNOTATE_RUNID/$$FORMAT"; \
 	done; \
-	find /var/local/pinacotron/download -type f |while read file; do \
+	find /var/local/pinacotron/google -type f | while read file; do \
 		shortname=$$(basename "$$file"); \
 		mininame="$${shortname:0:7}..."; \
 		dirname=$$(dirname "$$file"); \
