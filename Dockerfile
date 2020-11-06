@@ -1,4 +1,4 @@
-FROM constructionsincongrues/google-image-download:2.8.0-alpine3.10
+FROM alpine
 
 VOLUME [ "/var/local/pinacotron" ]
 VOLUME [ "/etc/pinacotron" ]
@@ -18,10 +18,6 @@ RUN apk --update --no-cache add \
         perl \
         poppler-utils \
         tar && \
-    perl -MCPAN -e'install URI::Escape' && \
-    curl -SsL "http://search.cpan.org/CPAN/authors/id/P/PE/PEDERST/rename-1.9.tar.gz" | tar -xzf - && \
-        ( cd "rename-1.9"; perl "Makefile.PL"; make && make install ) && \
-        rm -rf "rename-1.9" && \
     update-ms-fonts
 
 RUN addgroup -g 1000 pinacotron && \

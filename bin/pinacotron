@@ -19,6 +19,7 @@ function pinacotron() {
         --rm \
         -e PINACOTRON_HOST_PWD="${PWD}" \
         -it \
+        -u $(id -u):$(id -g) \
         -v "${PWD}/etc/pinacotron":/etc/pinacotron \
         -v "${PWD}/src/jekyll":/usr/local/src/pinacotron/jekyll \
         -v "${PWD}/var":/var/local/pinacotron/ \

@@ -36,19 +36,19 @@ execute:
 	for FORMAT in $(strip $(ANNOTATE_FORMATS)); do \
 		mkdir -p "/var/local/pinacotron/annotate/$$ANNOTATE_RUNID/$$FORMAT"; \
 	done; \
-	find /var/local/pinacotron/google -type f | while read file; do \
+	find /var/local/pinacotron/download -type f | while read file; do \
 		shortname=$$(basename "$$file"); \
 		mininame="$${shortname:0:7}..."; \
 		dirname=$$(dirname "$$file"); \
 		COLLECTION=$$(basename "$$dirname"); \
 		WORDS=$$(shuf -n1 /etc/pinacotron/words/$(strip $(ANNOTATE_WORDS))); \
 		$(call log,Annotating image,run_id='$$ANNOTATE_RUNID'$(comma) profile='$(strip $(ANNOTATE_PROFILE))'$(comma) collection='$$COLLECTION'$(comma) image='$$mininame'$(comma) words='$(strip $(ANNOTATE_WORDS))'); \
-		convert "$$file" $$(cat /etc/pinacotron/profiles/$(strip $(ANNOTATE_PROFILE)).json | jq -r '.annotate.annotate | to_entries | map("-" + .key + " " + .value) | join(" ")') "$$(echo $${WORDS} | tr ' ' '\n')" /var/local/pinacotron/annotate/$$ANNOTATE_RUNID/$$shortname; \
+		convert -font /var/local/pinacotron/fonts/Combat.otf "$$file" $$(cat /etc/pinacotron/profiles/$(strip $(ANNOTATE_PROFILE)).json | jq -r '.annotate.annotate | to_entries | map("-" + .key + " " + .value) | join(" ")') "$$(echo $${WORDS} | tr ' ' '\n')" /var/local/pinacotron/annotate/$$ANNOTATE_RUNID/$$shortname; \
 		for FORMAT in $(strip $(ANNOTATE_FORMATS)); do \
 			FORMAT_PROFILE=$$FORMAT; \
 			$(call log,Exporting image,run_id='$$ANNOTATE_RUNID'$(comma) profile='$(strip $(ANNOTATE_PROFILE))'$(comma) collection='$$COLLECTION'$(comma) image='$$mininame'$(comma) format='$$FORMAT'); \
 			if [ "$$(cat /etc/pinacotron/profiles/$(strip $(ANNOTATE_PROFILE)).json | jq -r .annotate.formats.$${FORMAT_PROFILE})" == "null" ]; then FORMAT_PROFILE=default; fi; \
-			convert $$(cat /etc/pinacotron/profiles/$(strip $(ANNOTATE_PROFILE)).json | jq -r ".annotate.formats.$${FORMAT_PROFILE} | to_entries | map(\"-\" + .key + \" \" + .value) | join(\" \")") /var/local/pinacotron/annotate/$$ANNOTATE_RUNID/$$shortname /var/local/pinacotron/annotate/$$ANNOTATE_RUNID/$$FORMAT/$$shortname.$$FORMAT; \
+			convert $$(cat /etc/pinacotron/profiles/$(strip $(ANNOTATE_PROFILE)).json | jq -r ".annotate.formats.$${FORMAT_PROFILE} | to_entries | map(\"-\" + .key + \" \" + .value) | join(\" \")") /var/local/pinacotron/annotate/$$ANNOTATE_RUNID/$$shortname /var/local/pinacotron/annotate/$$ANNOTATE_RUNID/$$FORMAT/$${RANDOM}.$$shortname.$$FORMAT; \
 		done; \
 		rm /var/local/pinacotron/annotate/$$ANNOTATE_RUNID/$$shortname; \
 	done; \
